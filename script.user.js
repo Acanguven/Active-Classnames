@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         Class List Generator
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/Acanguven/Active-Classnames
 // @version      0.1
-// @description  try to take over the world!
-// @author       You
-// @match        **
-// @require      https://raw.githubusercontent.com/eligrey/FileSaver.js/master/FileSaver.js
+// @description  Downloads all classnames on dom
+// @author       ACG
+// @match        *
 // @grant        none
 // ==/UserScript==
 
@@ -21,7 +20,21 @@
     btn.onclick = generateClassList;
     document.body.appendChild(btn);
     
-    setInterval(fetchClassList, 1000);
+	init();
+     
+    function init(){
+        appendBlobSaver();
+    }
+ 
+    function appendBlobSaver(){
+        var script = document.createElement('script');
+        script.src = location.protocol == 'https:' ? "https://cdn.rawgit.com/eligrey/FileSaver.js/master/FileSaver.js" : "http://cdn.rawgit.com/eligrey/FileSaver.js/master/FileSaver.js"
+		script.onload = function(){
+			document.body.appendChild(btn);
+			setInterval(fetchClassList, 1000);
+		}
+        document.getElementsByTagName('head')[0].appendChild(script);   
+    }
         
     function generateClassList(){
         download((location.hash+'-classList.txt').replace(/\//g,'').replace(/#/g,'').replace(/\!/g,''), outputList.join('\r\n'));
@@ -50,12 +63,14 @@
     function getStyle(className) {
         for(var z = 0, lenz = document.styleSheets.length; z < lenz; z++){
             var classes = document.styleSheets[z].rules || document.styleSheets[z].cssRules;
-            for (var x = 0, lenx = classes.length; x < lenx; x++) {
-                if (classes[x].selectorText && classes[x].selectorText.indexOf(className) > -1) {
-                    var classDetail = classes[x].cssText ? classes[x].cssText : classes[x].style.cssText;
-                    return classDetail;
-                }
-            }
+			if(classes){
+				for (var x = 0, lenx = classes.length; x < lenx; x++) {
+					if (classes[x].selectorText && classes[x].selectorText.indexOf(className) > -1) {
+						var classDetail = classes[x].cssText ? classes[x].cssText : classes[x].style.cssText;
+						return classDetail;
+					}
+				}
+			}
         }
         return null;
     }
