@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Class List Generator
 // @namespace    https://github.com/Acanguven/Active-Classnames
-// @version      0.1
+// @version      1.1
 // @description  Downloads all classnames on dom
 // @author       ACG
 // @match        *
